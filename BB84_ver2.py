@@ -77,7 +77,7 @@ class BB84:
             if self.x[i] == 1: circuit.h(0)
             circuit.barrier()
             circuit.cx(0,1)
-#            if self.z[i] == 1:circuit.h(1)
+            if self.z[i] == 1:circuit.h(1)#if the basis eve use is constant, the error is lower for some reason
             circuit.measure(1,1)
             circuit.barrier()
             if self.y[i] == 1: circuit.h(0)
@@ -164,17 +164,23 @@ class BB84:
         return e/len(self.key_alice)
 
 if __name__ == '__main__':
-    si = 40
-    bb = BB84(si,0.04)
-    bb.run()
-    print(bb.P())
-    bbev = BB84(si,0.04)
-    bbev.run_witheve()
+    size = 40 
+    error = 0.04
+    bb = BB84(size,error)      #sending without eve (numeber of qubits sending,error of measurement)
+    bb.run()                   #sending and public
+    print(bb.P())              #P = # of differences in A and B's key/ the length of the key 
+    
+    bbev = BB84(size,error)      #sending with eve
+    bbev.run_witheve()         
     print(bbev.P())
 
+'''
+#this part is to plot P(L) with e = 0.04
+#I don't know what's the point of this part, L have nothing to do with the error, so this plot is meaningless. Unless I misunderstood the question.
 
     ptol = []
-'''
+    #L = 10 to 100, intevral of 2
+    
     for i in range(10,100,2):
         bb84 = BB84(i,0.04)
         bb84.run(show=False)
@@ -183,4 +189,5 @@ if __name__ == '__main__':
     x.astype(int)
     plt.plot(x,ptol)
     print(ptol)
-    plt.show()'''
+    plt.show()
+'''
