@@ -28,8 +28,12 @@ class BB84:
         self.noise = NoiseModel()
         self.error = pauli_error([('X',self.epslion),('Z',self.epslion),('I',1-2*self.epslion)])
 
+    
+    #make a random array of length consist of 0 or 1    
     def vector(self,length): return np.random.randint(0,2,length)
-
+    
+    
+    #clear everytime before sending
     def clear(self):
         self.alice = self.vector(self.size)
         self.x = self.vector(self.size)
@@ -44,7 +48,9 @@ class BB84:
         self.bob = np.zeros(self.size)
         self.eve = np.zeros(self.size)
         return
-
+    
+    
+    #sending and receiving the qubits without eve
     def sending(self):
         self.clear()
 
@@ -67,7 +73,9 @@ class BB84:
         self.bob = self.bob.astype(int)
 
         return
-
+    
+    
+    #sending and receiving the qubits with eve
     def sending_witheve(self):
         self.clear()
 
@@ -97,9 +105,9 @@ class BB84:
         self.eve = self.eve.astype(int)
 
         return
-
-
-
+    
+    
+    #public the basis they use without eve
     def public(self):
         for i in range(self.size):
             if self.x[i] == self.y[i]:
@@ -107,7 +115,9 @@ class BB84:
                 self.key_alice.append(self.alice[i])
                 self.key.append(i)
         return
-
+    
+    
+    #public the basis they use with eve    
     def public_witheve(self):
         for i in range(self.size):
             if self.x[i] == self.y[i]:
@@ -115,8 +125,10 @@ class BB84:
                 self.key_alice.append(self.alice[i])
                 self.key_eve.append(self.eve[i])
                 self.key.append(i)
-
-
+        return
+    
+    
+    # show the resulting key and so without eve           
     def show(self):
         print('alice:', self.alice)
         print('x:', self.x)
@@ -127,7 +139,9 @@ class BB84:
         print("bob's key  :", self.key_bob)
         print('key:', self.key)
         return
-
+    
+    
+    #show the resulting key and so with eve
     def show_witheve(self):
         print('alice:', self.alice)
         print('x:', self.x)
@@ -140,7 +154,10 @@ class BB84:
         print("bob's key  :", self.key_bob)
         print("eve's key  :",self.key_eve)
         print('key:', self.key)
-
+        return
+    
+    
+    #run the whole experiment
     def run(self,show = True):
         self.sending()
         self.public()
@@ -149,11 +166,16 @@ class BB84:
 
         return
 
+    
+    #run the whole experiment with eve
     def run_witheve(self,show = True):
         self.sending_witheve()
         self.public_witheve()
         if show:self.show_witheve()
+        return 
 
+            
+    # value of P
     def P(self):
         if len(self.key_alice) != len(self.key_bob):
             print('you fucking donkey')
@@ -163,6 +185,9 @@ class BB84:
             if self.key_alice[i] != self.key_bob[i]:e+=1
         return e/len(self.key_alice)
 
+    
+    
+#main code
 if __name__ == '__main__':
     size = 40 
     error = 0.04
