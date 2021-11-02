@@ -84,8 +84,9 @@ class BB84:
             if self.alice[i] == 1: circuit.x(0)
             if self.x[i] == 1: circuit.h(0)
             circuit.barrier()
+            if self.z[i] == 1:circuit.h(0)
             circuit.cx(0,1)
-            if self.z[i] == 1:circuit.h(1)#if the basis eve use is constant, the error is lower for some reason
+            if self.z[i] == 1:circuit.h(0)#if the basis eve use is constant, the error is lower for some reason
             circuit.measure(1,1)
             circuit.barrier()
             if self.y[i] == 1: circuit.h(0)
